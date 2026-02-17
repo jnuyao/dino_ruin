@@ -1,0 +1,217 @@
+Dino Math Ruins（Web）
+
+1) 目标与成功标准
+目标（MVP 只做 3 件事）
+	1.	让 6–7 岁孩子用“机关闯关”的方式练核心数学思维（规律/凑数/分类/排除）。
+	2.	形成可持续的游戏循环：闯关 → 得碎片 → 孵蛋解锁恐龙 → 继续闯关。
+	3.	支持“可恢复进度”（存档），避免每次从头玩。
+
+成功标准（验收用）
+	•	孩子能在 无需家长解释 的情况下完成前 5 关（提示系统可用）。
+	•	20 关都可通关（至少 1 种正确解）。
+	•	刷新页面后仍能保留进度（本地存档），并能继续玩。
+	•	交互不卡：点选/拖拽能稳定识别（桌面+平板优先）。
+
+2) 用户画像与核心故事
+用户角色
+	•	孩子（6–7 岁）：玩关卡、拿奖励、孵蛋、重复挑战。
+	•	家长（MVP 只做“隐藏入口/简易页”）：重置进度、查看大致进度（可选）。
+
+核心用户故事（MVP）
+	1.	孩子打开网站 → 看到“遗迹地图（20 个门）” → 点第 1 关开始。
+	2.	在关卡里拖拽/点选完成机关 → 门打开 → 得到碎片 → 自动回地图。
+	3.	碎片集齐 → 孵蛋页出现“可孵蛋”提示 → 解锁恐龙卡片。
+	4.	退出/刷新 → 进度仍在。
+
+3) MVP 功能范围
+A. 遗迹地图
+	•	显示 20 关节点：锁定/可玩/已通关
+	•	节点按顺序解锁（第 N 关通关解锁 N+1）
+
+B. 关卡引擎（data-driven）
+	•	关卡从 levels.json 读取（而不是写死在组件里）
+	•	至少支持 3 种交互类型：
+	1.	SelectCards：点选数字/图形卡（如“选出所有偶数”）
+	2.	DragToSlots：拖拽卡片进槽位（如“凑到 10”）
+	3.	DragToBuckets：拖拽分组（如“草食/肉食分类”）
+
+C. 提示系统
+	•	每关最多 3 次提示
+	•	提示是“线索式”逐步递进
+	•	使用提示会降低奖励（但不影响通关）
+
+D. 奖励与孵蛋
+	•	通关获得碎片（例如：普通 1 片，不用提示额外加 1 片）
+	•	孵蛋：集齐 X 片（如 5 片）→ 解锁 1 只恐龙（随机或按顺序）
+	•	恐龙图鉴（最简单的卡片列表即可）
+
+E. 存档
+	•	MVP 默认：localStorage 本地存档
+	•	存档内容：已通关关卡、每关最佳表现（是否用提示）、碎片数量、已解锁恐龙
+
+Supabase 在 MVP 阶段先“接入但不强依赖”：你可以先把表建好，后续加登录再上云同步。
+可选（Should / Nice-to-have）
+	•	家长页：重置存档、跳关开关、查看孩子在什么题型卡关（最简单统计）
+	•	云端存档（需要 Supabase Auth）：同一账号跨设备同步
+
+明确不做（Non-goals）
+	•	排行榜、社交、多人
+	•	复杂角色动画/物理引擎（不引入 Phaser/Pixi）
+	•	AI 自动出题（先手工题库，保证正确性）
+
+
+4) 技术栈
+前端/全栈
+	•	React + TypeScript
+	•	Tailwind CSS
+	•	拖拽：dnd-kit（或先用原生 pointer events，后面再换）
+
+数据/后端
+	•	Supabase（Postgres + 可选 Auth + Storage）
+	•	MVP 存档优先 localStorage；Supabase 先用于：
+	•	（可选）存储恐龙图片资源 / 未来云存档表结构
+
+部署
+	•	Vercel
+
+埋点（可选）
+	•	PostHog（后面用来分析卡关点）
+
+5) 信息架构与页面
+页面清单（Routes）
+	1.	/ 遗迹地图（关卡选择 + 入口按钮）
+	2.	/level/[id] 关卡页（渲染交互组件 + 提示 + 提交判定）
+	3.	/hatch 孵蛋页（展示当前碎片、可孵蛋按钮、孵化动画/结果）
+	4.	/dex 图鉴页（已解锁恐龙卡片）
+	5.	/parent 家长页（可选：重置、跳关、简单统计）
+
+页面流程
+	•	地图 → 关卡 →（通关）→ 通关弹层 → 返回地图
+	•	地图 → 孵蛋（当碎片够时出现按钮）→ 解锁 → 图鉴
+
+6) 数据模型（MVP：本地 + Supabase 预留）
+本地存档结构（localStorage key: dino_save_v1）
+	•	version: 1
+	•	unlockedLevel: number（默认 1）
+	•	levels: {[levelId]: { cleared: bool, stars: 0..3, hintsUsed: 0..3, bestTimeMs?: number }}
+	•	shards: number（碎片）
+	•	dinosaursUnlocked: string[]（恐龙 id 列表）
+	•	lastPlayedAt: timestamp
+
+Supabase 表（先建好，后面接 Auth 再用）
+	1.	profiles
+
+	•	id (uuid, pk)（对应 auth.users）
+	•	created_at
+	•	display_name（可选）
+
+	2.	saves
+
+	•	id (uuid, pk)
+	•	user_id (uuid, fk profiles.id)
+	•	save_json (jsonb)（直接存整个存档）
+	•	updated_at
+
+	3.	level_events（可选埋点落库，先不做也行）
+
+	•	id
+	•	user_id（可空）
+	•	level_id
+	•	event_type（start / hint / submit / clear）
+	•	payload (jsonb)
+	•	created_at
+
+7) 关卡系统 Spec（levels.json + 规则引擎）
+
+关卡 JSON Schema（建议字段）
+	•	id: number
+	•	title: string（例如“只让偶数通过”）
+	•	story: string（儿童友好一句话）
+	•	type: "select_cards" | "drag_to_slots" | "drag_to_buckets"
+	•	ui: 该类型需要的渲染参数（卡片、槽位、桶、目标展示等）
+	•	rule: 判定规则（结构化，不写成自然语言）
+	•	hints: string[]（最多 3 条）
+	•	reward: { shards: number, bonusNoHint: number }
+
+规则引擎接口（代码层）
+	•	evaluate(level, state) -> { ok: boolean, feedback: string, details?: any }
+	•	每种 type 对应一个 evaluator（策略模式）
+	•	反馈分 2 类：
+	•	soft_feedback: 没通过但给方向（“还差一点点”“再检查有没有偶数”）
+	•	hard_feedback: 规则不满足（“需要正好 2 张卡”“不能包含 5”）
+
+MVP 关卡类型的最小交互状态（state）
+	•	select_cards: { selectedIds: string[] }
+	•	drag_to_slots: { slots: (string|null)[] }
+	•	drag_to_buckets: { buckets: {[bucketId]: string[]} }
+
+8) 组件清单（你照着拆就能写）
+通用组件
+	•	Card（数字卡/图形卡/恐龙卡）
+	•	PrimaryButton, Modal, Toast
+	•	ProgressBar（碎片进度、关卡进度）
+	•	HintPanel（提示按钮 + 提示内容）
+
+关卡组件（核心）
+	•	LevelRenderer（根据 type 分发渲染）
+	•	SelectCardsLevel
+	•	DragToSlotsLevel
+	•	DragToBucketsLevel
+	•	SubmitBar（提交/重置/提示）
+
+存档与状态
+	•	useSave()：加载/更新/持久化（localStorage）
+	•	applyReward()：结算碎片、解锁下一关、记录星级
+	•	syncToSupabase()（预留，MVP 可不启用）
+
+9) API（Next.js Route Handlers，MVP 可先空实现）
+
+因为 MVP 主存档在本地，所以 API 先做骨架，后面接云同步很顺。
+
+	•	POST /api/save/sync：上传本地 save_json（需要登录后启用）
+	•	GET /api/save/me：拉取云端存档（需要登录后启用）
+	•	POST /api/events：（可选）上报关卡事件
+
+10) 埋点事件（建议从第一天就加，代码很少但价值大）
+事件名（可先 console，后接 PostHog）：
+	•	level_start：level_id
+	•	hint_used：level_id, hint_index
+	•	level_submit：level_id, ok
+	•	level_clear：level_id, hints_used, duration_ms
+	•	hatch：dino_id, shards_spent
+
+用这些你能快速知道：孩子卡在哪些题型、提示点到第几条才过。
+
+11) MVP 交付拆解（你按任务单推进）
+Milestone 1：可玩闭环（第 1–3 天）
+	•	地图页 + 路由
+	•	levels.json 接入（先 3 关）
+	•	select_cards 通关判定
+	•	localStorage 存档（解锁下一关）
+
+验收：3 关能完整玩通、刷新不丢进度
+
+Milestone 2：关卡类型齐全（第 4–7 天）
+	•	drag_to_slots、drag_to_buckets
+	•	提示系统 + 通关结算
+	•	题库补齐到 20 关
+
+验收：20 关都能通过（你自己测一遍）
+
+Milestone 3：奖励循环（第 8–10 天）
+	•	碎片系统 + 孵蛋页
+	•	图鉴页
+	•	通关弹层更“游戏化”（开门动画可用 CSS）
+
+验收：孩子能玩 10 分钟不腻（核心循环成立）
+
+Milestone 4（可选）：Supabase 预埋（第 11–14 天）
+	•	建表 + 存档 sync API 骨架
+	•	（可选）登录（家长登录即可）
+
+12) 验收清单（Definition of Done）
+	•	三种关卡类型都可渲染、可判定
+	•	每关有 0–3 条提示，且使用提示会影响奖励
+	•	进度与碎片在刷新后保持一致
+	•	孵蛋能解锁恐龙并在图鉴展示
+	•	20 关题库数据可配置，不需要改代码也能新增关卡

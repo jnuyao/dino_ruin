@@ -1,0 +1,448 @@
+[
+  {
+    "id": 1,
+    "title": "只让偶数通过",
+    "story": "石门只认偶数脚印。",
+    "type": "select_cards",
+    "ui": {
+      "prompt": "选出所有偶数",
+      "cards": [
+        { "id": "n1", "label": "1", "value": 1 },
+        { "id": "n2", "label": "2", "value": 2 },
+        { "id": "n3", "label": "3", "value": 3 },
+        { "id": "n4", "label": "4", "value": 4 },
+        { "id": "n5", "label": "5", "value": 5 },
+        { "id": "n6", "label": "6", "value": 6 }
+      ]
+    },
+    "rule": { "mode": "select_exact_ids", "ids": ["n2", "n4", "n6"] },
+    "hints": ["偶数可以被2整除。", "尾数是0/2/4/6/8通常是偶数。", "试试2、4、6。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 2,
+    "title": "凑到10",
+    "story": "把两块石板放进正确的槽位。",
+    "type": "drag_to_slots",
+    "ui": {
+      "prompt": "把数字拖到槽位，使两槽之和为10",
+      "cards": [
+        { "id": "a2", "label": "2", "value": 2 },
+        { "id": "a4", "label": "4", "value": 4 },
+        { "id": "a6", "label": "6", "value": 6 },
+        { "id": "a8", "label": "8", "value": 8 }
+      ],
+      "slots": [
+        { "id": "s1", "label": "左槽" },
+        { "id": "s2", "label": "右槽" }
+      ]
+    },
+    "rule": { "mode": "slot_exact_match", "slotTargets": ["a4", "a6"] },
+    "hints": ["只需要两张卡。", "4+6=10。", "左4右6或左6右4都可以。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 3,
+    "title": "草食还是肉食",
+    "story": "把恐龙食谱分到正确石桶。",
+    "type": "drag_to_buckets",
+    "ui": {
+      "prompt": "把卡片分到草食/肉食桶",
+      "cards": [
+        { "id": "dino_leaf", "label": "三角龙", "tag": "herb" },
+        { "id": "dino_spike", "label": "剑龙", "tag": "herb" },
+        { "id": "dino_trex", "label": "霸王龙", "tag": "carn" },
+        { "id": "dino_raptor", "label": "迅猛龙", "tag": "carn" }
+      ],
+      "buckets": [
+        { "id": "herb", "label": "草食" },
+        { "id": "carn", "label": "肉食" }
+      ]
+    },
+    "rule": {
+      "mode": "bucket_exact_match",
+      "bucketItems": {
+        "herb": ["dino_leaf", "dino_spike"],
+        "carn": ["dino_trex", "dino_raptor"]
+      }
+    },
+    "hints": ["先看牙齿和体型描述。", "三角龙和剑龙是草食。", "霸王龙和迅猛龙是肉食。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 4,
+    "title": "比5大的数",
+    "story": "火把亮起只接受大数字。",
+    "type": "select_cards",
+    "ui": {
+      "prompt": "选出所有大于5的数字",
+      "cards": [
+        { "id": "b1", "label": "1", "value": 1 },
+        { "id": "b4", "label": "4", "value": 4 },
+        { "id": "b6", "label": "6", "value": 6 },
+        { "id": "b7", "label": "7", "value": 7 },
+        { "id": "b9", "label": "9", "value": 9 }
+      ]
+    },
+    "rule": { "mode": "select_exact_ids", "ids": ["b6", "b7", "b9"] },
+    "hints": ["注意是大于，不是大于等于。", "6、7、9都比5大。", "别选1和4。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 5,
+    "title": "双槽平衡",
+    "story": "两边重量要一样。",
+    "type": "drag_to_slots",
+    "ui": {
+      "prompt": "左槽和右槽放同样大的数字",
+      "cards": [
+        { "id": "c3a", "label": "3", "value": 3 },
+        { "id": "c3b", "label": "3", "value": 3 },
+        { "id": "c5", "label": "5", "value": 5 }
+      ],
+      "slots": [
+        { "id": "s1", "label": "左槽" },
+        { "id": "s2", "label": "右槽" }
+      ]
+    },
+    "rule": { "mode": "slot_exact_match", "slotTargets": ["c3a", "c3b"] },
+    "hints": ["两边要一样。", "有两张相同数字。", "把两张3放进去。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 6,
+    "title": "颜色分类",
+    "story": "彩石要回到对应颜色桶。",
+    "type": "drag_to_buckets",
+    "ui": {
+      "prompt": "把红石和蓝石分开",
+      "cards": [
+        { "id": "r1", "label": "红1", "tag": "red" },
+        { "id": "r2", "label": "红2", "tag": "red" },
+        { "id": "b1", "label": "蓝1", "tag": "blue" },
+        { "id": "b2", "label": "蓝2", "tag": "blue" }
+      ],
+      "buckets": [
+        { "id": "red", "label": "红桶" },
+        { "id": "blue", "label": "蓝桶" }
+      ]
+    },
+    "rule": {
+      "mode": "bucket_exact_match",
+      "bucketItems": {
+        "red": ["r1", "r2"],
+        "blue": ["b1", "b2"]
+      }
+    },
+    "hints": ["先看颜色字样。", "红石进红桶。", "蓝石进蓝桶。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 7,
+    "title": "奇数守卫",
+    "story": "守卫只放行奇数。",
+    "type": "select_cards",
+    "ui": {
+      "prompt": "选出所有奇数",
+      "cards": [
+        { "id": "k1", "label": "1", "value": 1 },
+        { "id": "k2", "label": "2", "value": 2 },
+        { "id": "k5", "label": "5", "value": 5 },
+        { "id": "k8", "label": "8", "value": 8 },
+        { "id": "k9", "label": "9", "value": 9 }
+      ]
+    },
+    "rule": { "mode": "select_exact_ids", "ids": ["k1", "k5", "k9"] },
+    "hints": ["奇数不能被2整除。", "1、5、9是奇数。", "别选2和8。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 8,
+    "title": "按顺序摆放",
+    "story": "机关要求从小到大。",
+    "type": "drag_to_slots",
+    "ui": {
+      "prompt": "把2放左槽，8放右槽",
+      "cards": [
+        { "id": "o2", "label": "2", "value": 2 },
+        { "id": "o8", "label": "8", "value": 8 },
+        { "id": "o5", "label": "5", "value": 5 }
+      ],
+      "slots": [
+        { "id": "s1", "label": "左槽" },
+        { "id": "s2", "label": "右槽" }
+      ]
+    },
+    "rule": { "mode": "slot_exact_match", "slotTargets": ["o2", "o8"] },
+    "hints": ["左边放更小的。", "2比8小。", "左2右8。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 9,
+    "title": "形状分类",
+    "story": "把圆形和三角分开放。",
+    "type": "drag_to_buckets",
+    "ui": {
+      "prompt": "按形状分桶",
+      "cards": [
+        { "id": "sh_c1", "label": "圆A", "tag": "circle" },
+        { "id": "sh_c2", "label": "圆B", "tag": "circle" },
+        { "id": "sh_t1", "label": "三角A", "tag": "triangle" },
+        { "id": "sh_t2", "label": "三角B", "tag": "triangle" }
+      ],
+      "buckets": [
+        { "id": "circle", "label": "圆形桶" },
+        { "id": "triangle", "label": "三角桶" }
+      ]
+    },
+    "rule": {
+      "mode": "bucket_exact_match",
+      "bucketItems": {
+        "circle": ["sh_c1", "sh_c2"],
+        "triangle": ["sh_t1", "sh_t2"]
+      }
+    },
+    "hints": ["看名字里的形状。", "圆A圆B进圆形桶。", "三角A三角B进三角桶。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 10,
+    "title": "个位是0或5",
+    "story": "神像只认能整除5的数。",
+    "type": "select_cards",
+    "ui": {
+      "prompt": "选出能被5整除的数",
+      "cards": [
+        { "id": "m5", "label": "5", "value": 5 },
+        { "id": "m10", "label": "10", "value": 10 },
+        { "id": "m12", "label": "12", "value": 12 },
+        { "id": "m15", "label": "15", "value": 15 }
+      ]
+    },
+    "rule": { "mode": "select_exact_ids", "ids": ["m5", "m10", "m15"] },
+    "hints": ["个位看0或5。", "5、10、15符合。", "12不符合。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 11,
+    "title": "找最小和最大",
+    "story": "把最小和最大送入机关。",
+    "type": "drag_to_slots",
+    "ui": {
+      "prompt": "左槽放最小值1，右槽放最大值9",
+      "cards": [
+        { "id": "p1", "label": "1", "value": 1 },
+        { "id": "p4", "label": "4", "value": 4 },
+        { "id": "p9", "label": "9", "value": 9 }
+      ],
+      "slots": [
+        { "id": "s1", "label": "左槽" },
+        { "id": "s2", "label": "右槽" }
+      ]
+    },
+    "rule": { "mode": "slot_exact_match", "slotTargets": ["p1", "p9"] },
+    "hints": ["先找最小和最大。", "最小是1，最大是9。", "左1右9。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 12,
+    "title": "天气分类",
+    "story": "把晴天和雨天图标分开。",
+    "type": "drag_to_buckets",
+    "ui": {
+      "prompt": "按天气类型分桶",
+      "cards": [
+        { "id": "sun1", "label": "太阳A", "tag": "sun" },
+        { "id": "sun2", "label": "太阳B", "tag": "sun" },
+        { "id": "rain1", "label": "雨云A", "tag": "rain" },
+        { "id": "rain2", "label": "雨云B", "tag": "rain" }
+      ],
+      "buckets": [
+        { "id": "sun", "label": "晴天桶" },
+        { "id": "rain", "label": "雨天桶" }
+      ]
+    },
+    "rule": {
+      "mode": "bucket_exact_match",
+      "bucketItems": {
+        "sun": ["sun1", "sun2"],
+        "rain": ["rain1", "rain2"]
+      }
+    },
+    "hints": ["看图标名字。", "太阳进晴天桶。", "雨云进雨天桶。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 13,
+    "title": "小于4",
+    "story": "只让小数字点亮机关。",
+    "type": "select_cards",
+    "ui": {
+      "prompt": "选出小于4的数字",
+      "cards": [
+        { "id": "q1", "label": "1", "value": 1 },
+        { "id": "q3", "label": "3", "value": 3 },
+        { "id": "q4", "label": "4", "value": 4 },
+        { "id": "q7", "label": "7", "value": 7 }
+      ]
+    },
+    "rule": { "mode": "select_exact_ids", "ids": ["q1", "q3"] },
+    "hints": ["小于4不含4。", "1和3符合。", "4和7不行。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 14,
+    "title": "凑到12",
+    "story": "双槽需要合力12。",
+    "type": "drag_to_slots",
+    "ui": {
+      "prompt": "左槽放5，右槽放7",
+      "cards": [
+        { "id": "u5", "label": "5", "value": 5 },
+        { "id": "u7", "label": "7", "value": 7 },
+        { "id": "u4", "label": "4", "value": 4 }
+      ],
+      "slots": [
+        { "id": "s1", "label": "左槽" },
+        { "id": "s2", "label": "右槽" }
+      ]
+    },
+    "rule": { "mode": "slot_exact_match", "slotTargets": ["u5", "u7"] },
+    "hints": ["目标是12。", "5+7=12。", "把5和7放入槽位。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 15,
+    "title": "交通工具分类",
+    "story": "陆地和天空分开放。",
+    "type": "drag_to_buckets",
+    "ui": {
+      "prompt": "把陆地和天空交通工具分桶",
+      "cards": [
+        { "id": "car", "label": "汽车", "tag": "land" },
+        { "id": "bus", "label": "巴士", "tag": "land" },
+        { "id": "plane", "label": "飞机", "tag": "air" },
+        { "id": "heli", "label": "直升机", "tag": "air" }
+      ],
+      "buckets": [
+        { "id": "land", "label": "陆地桶" },
+        { "id": "air", "label": "天空桶" }
+      ]
+    },
+    "rule": {
+      "mode": "bucket_exact_match",
+      "bucketItems": {
+        "land": ["car", "bus"],
+        "air": ["plane", "heli"]
+      }
+    },
+    "hints": ["看它在哪行驶。", "汽车巴士在地面。", "飞机直升机在天空。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 16,
+    "title": "双数守门",
+    "story": "门锁只认双数。",
+    "type": "select_cards",
+    "ui": {
+      "prompt": "选出双数",
+      "cards": [
+        { "id": "e2", "label": "2", "value": 2 },
+        { "id": "e5", "label": "5", "value": 5 },
+        { "id": "e8", "label": "8", "value": 8 },
+        { "id": "e11", "label": "11", "value": 11 }
+      ]
+    },
+    "rule": { "mode": "select_exact_ids", "ids": ["e2", "e8"] },
+    "hints": ["双数可被2整除。", "2和8符合。", "5和11不符合。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 17,
+    "title": "左右升序",
+    "story": "从左到右必须越来越大。",
+    "type": "drag_to_slots",
+    "ui": {
+      "prompt": "左槽放3，右槽放9",
+      "cards": [
+        { "id": "g3", "label": "3", "value": 3 },
+        { "id": "g6", "label": "6", "value": 6 },
+        { "id": "g9", "label": "9", "value": 9 }
+      ],
+      "slots": [
+        { "id": "s1", "label": "左槽" },
+        { "id": "s2", "label": "右槽" }
+      ]
+    },
+    "rule": { "mode": "slot_exact_match", "slotTargets": ["g3", "g9"] },
+    "hints": ["左边要更小。", "3比9小。", "左3右9。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 18,
+    "title": "昼夜分类",
+    "story": "把白天和夜晚图标分桶。",
+    "type": "drag_to_buckets",
+    "ui": {
+      "prompt": "按昼夜分桶",
+      "cards": [
+        { "id": "day1", "label": "太阳", "tag": "day" },
+        { "id": "day2", "label": "白云", "tag": "day" },
+        { "id": "night1", "label": "月亮", "tag": "night" },
+        { "id": "night2", "label": "星星", "tag": "night" }
+      ],
+      "buckets": [
+        { "id": "day", "label": "白天桶" },
+        { "id": "night", "label": "夜晚桶" }
+      ]
+    },
+    "rule": {
+      "mode": "bucket_exact_match",
+      "bucketItems": {
+        "day": ["day1", "day2"],
+        "night": ["night1", "night2"]
+      }
+    },
+    "hints": ["看是白天还是夜晚。", "太阳白云在白天。", "月亮星星在夜晚。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 19,
+    "title": "大于等于8",
+    "story": "终门要大数字钥匙。",
+    "type": "select_cards",
+    "ui": {
+      "prompt": "选出大于等于8的数字",
+      "cards": [
+        { "id": "z6", "label": "6", "value": 6 },
+        { "id": "z8", "label": "8", "value": 8 },
+        { "id": "z9", "label": "9", "value": 9 },
+        { "id": "z10", "label": "10", "value": 10 }
+      ]
+    },
+    "rule": { "mode": "select_exact_ids", "ids": ["z8", "z9", "z10"] },
+    "hints": ["等于8也算。", "8、9、10都可以。", "6不行。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  },
+  {
+    "id": 20,
+    "title": "最后的平衡门",
+    "story": "把正确的两块石板放入终门。",
+    "type": "drag_to_slots",
+    "ui": {
+      "prompt": "左槽放2，右槽放7",
+      "cards": [
+        { "id": "f2", "label": "2", "value": 2 },
+        { "id": "f7", "label": "7", "value": 7 },
+        { "id": "f9", "label": "9", "value": 9 }
+      ],
+      "slots": [
+        { "id": "s1", "label": "左槽" },
+        { "id": "s2", "label": "右槽" }
+      ]
+    },
+    "rule": { "mode": "slot_exact_match", "slotTargets": ["f2", "f7"] },
+    "hints": ["两块目标数字是小+大。", "2和7是正确组合。", "左2右7。"],
+    "reward": { "shards": 1, "bonusNoHint": 1 }
+  }
+]
